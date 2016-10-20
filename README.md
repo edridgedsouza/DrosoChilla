@@ -4,4 +4,4 @@ This is the GitHub page for the work-in-progress LabMonitor, developed by Edridg
 
 ## License
 
-This work is subject to the MIT License. Copyright 2016 Edridge D'Souza and Markstein Lab.
+This work is open-source and subject to the MIT License. Copyright 2016 Edridge D'Souza and Markstein Lab.

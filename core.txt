@@ -1,0 +1,13 @@
+core.txt
+setup.sh
+daemon.sh
+measure.py
+scheduler.sh
+app.py
+templates
+	index.html
+static
+	d3.v3.min.js
+	plotly-latest.min.js
+
+TODO.txt

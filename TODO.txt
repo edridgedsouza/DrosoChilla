@@ -1,0 +1,6 @@
+-Make web server accessible outside of ethernet network
+-Incorporate "curate" into scheduler
+-Incorporate app.py into scheduler
+-Prettify webapp
+-Allow webapp to dynamically choose number of data points
+-Datetime parsing improvements

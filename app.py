@@ -2,6 +2,8 @@
 # Flask web app
 
 from flask import Flask, render_template
+import re
+
 
 app = Flask(__name__)
 
@@ -9,10 +11,16 @@ app = Flask(__name__)
 @app.route('/log')
 def makelog():
 	header = 'time\ttemp\thum\n'
-	LINES = 2880 # Theoretical number of measurements in 24 hours
+	LINES = 500
 	with open('./templog.txt','r') as file:
-		data = file.read()
-	return header + data
+		data = file.readlines()
+	# Ignore error outputs to log
+	def isTrueLine(line):
+		pattern = re.compile('.*\\t.*\\t.*')
+		return bool(pattern.search(line))
+	truelines = [line for line in data if isTrueLine(line)]
+	finaldata = ''.join(truelines)
+	return header + finaldata
 
 @app.route('/')
 def index():

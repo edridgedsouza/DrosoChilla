@@ -11,17 +11,24 @@ if crontab -l; then
 	crontab -l  > currentcron
 fi
 
+if grep -q "$PWD/daemon.sh" currentcron; then
+	echo "Daemon job already scheduled"
+else
+	echo "@reboot $PWD/daemon.sh" >> currentcron
+	echo "Daemon job added to cron reboot"
+fi
+
+
 if grep -q "$PWD/measure.py" currentcron; then
 	echo "Measuring job already scheduled"
 else
 	# Working around crontab's 1-minute time resolution
-	echo "* * * * * $PWD/measure.py >> $PWD/templog.txt" >> currentcron
-	echo "* * * * * (sleep 30; $PWD/measure.py >> $PWD/templog.txt)" >> currentcron
-	crontab currentcron
+	echo "* * * * * $PWD/measure.py >> $PWD/templog.txt somescript.py 2> /dev/null" >> currentcron
+	echo "* * * * * (sleep 30; $PWD/measure.py >> $PWD/templog.txt somescript.py 2> /dev/null)" >> currentcron
 	echo "Measuring job added to cron"
 fi
 
-
+crontab currentcron
 
 
 rm currentcron

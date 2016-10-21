@@ -115,9 +115,12 @@
             // Remove outlier values where temp and humidity sensor don't work
             while (temp.indexOf("-999") != -1){
                 outlier = temp.indexOf("-999")
-                time.splice(outlier,1)
-                temp.splice(outlier,1)
-                hum.splice(outlier,1)
+                //Uncomment if you just want to discard these data points
+                //time.splice(outlier,1)
+                //temp.splice(outlier,1)
+                //hum.splice(outlier,1)
+                temp[outlier] = "NA"
+                hum[outlier] = "NA"
             }
 
             console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);

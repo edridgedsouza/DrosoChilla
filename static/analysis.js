@@ -204,5 +204,9 @@ function downloadify(arr){
     }
 
     var encodedUri = encodeURI(content)
-    window.open(encodedUri)
+    //window.open(encodedUri)
+
+    link = document.getElementById("downloader")
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "my_data.tsv");
 }

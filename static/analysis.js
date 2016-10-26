@@ -199,7 +199,7 @@ function downloadify(arr){
     var separator="\t";
     var content = "data:text/tab-separated-values;charset=utf-8,";
     content += "Time" + separator + "Temperature" + separator + "Humidity\n"
-    for (var row=0; row <= arr[0].length; row++) {
+    for (var row=0; row < arr[0].length; row++) {
         content = content + arr[0][row] + separator + arr[1][row] + separator + arr[2][row] + "\n";
     }
 

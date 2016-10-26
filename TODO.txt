@@ -5,10 +5,4 @@
 -Logrotate
 -World clock sync
 -Security patches
-
-
-DONE on 10/25/16:
-- Fixed axis issues
-- Added datetime selector
-- HTML/CSS aesthetic tweaks
-- Restructured script locations
+-Send texts/email notifications?

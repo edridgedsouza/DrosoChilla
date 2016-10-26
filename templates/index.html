@@ -22,7 +22,25 @@
             <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
             <link rel="stylesheet" href="/static/blog.css">
             <link rel='shortcut icon' href='/static/favicon.ico' type='image/x-icon'>
+
+
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+            <link rel="stylesheet" href="/resources/demos/style.css">
+            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+            <script>
+              $( function() {
+                $( "#datepicker1" ).datepicker();
+              } );
+
           
+              $( function() {
+                $( "#datepicker2" ).datepicker();
+              } );
+            </script>
+
+
         <!--<![endif]-->
 
 
@@ -73,7 +91,23 @@
                         </header>
 
                         <div class="post-description">
-                            <div id="graph" style="width:1000px;height:600px;"></div>
+                            <p>Select date range to generate graph.</p>
+                            <p>
+                                Start date: <input style="text-align: center;" type="text" id="datepicker1" placeholder="Start date">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                End date: <input style="text-align: center;" type="text" id="datepicker2" placeholder="End date">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="$('#graph').html(''); graphIt(scaleDates());">Generate graph</button>
+                            </p>
+
+                            <div id="graph" style="width:1000px;height:600px; border-style: solid; border-color: #EEEEEE; text-align: center;"><span style="vertical-align: middle; line-height:600px;">Please generate your graph to see the visualization.</span></div>
+
+                            <!-- Not really necessary but whatever. You can always just refresh the page.
+                            <p>
+                                <button onclick="getData();">Update data</button>
+                            </p>
+                            -->
+
                         </div>
                     </section>
 
@@ -93,110 +127,8 @@
     </div>
 
         
-        <script type="text/javascript">
-        function getData(){
-        Plotly.d3.tsv("/log", function(data){
-           // Plotly.d3.tsv("/static/templog.txt", function(data){
-                data.forEach(function(d){console.log(d);})
-                process(data)
-            })
-        }
-
-        function process(rows){
-            var time = [], temp = [], hum = [];
-
-            for (var i=0; i < rows.length; i++){
-                currentRow = rows[i];
-                time.push(currentRow['time']);
-                temp.push(currentRow['temp']);
-                hum.push(currentRow['hum']);
-            }
-
-            // Remove outlier values where temp and humidity sensor don't work
-            while (temp.indexOf("-999") != -1){
-                outlier = temp.indexOf("-999")
-                //Uncomment if you just want to discard these data points
-                //time.splice(outlier,1)
-                //temp.splice(outlier,1)
-                //hum.splice(outlier,1)
-                temp[outlier] = "NA"
-                hum[outlier] = "NA"
-            }
-
-            console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);
-            graphIt(time, temp, hum);
-        }
-
-        function graphIt(datetime, temperature, humidity){
-            var plotDiv = document.getElementById("plot"); // Doesn't seem to be used but it was in the tutorial so I'm keeping it.
-            var tempTrace = {x: datetime, 
-                y: temperature, 
-                name: "Temperature", 
-                type: 'scatter',
-                //mode: 'lines+markers',
-                line: {shape: 'spline', width: 4},
-                marker:{color: 'rgb(255,122,105)'}
-            };
-
-            var humTrace = {x: datetime, 
-                y: humidity, 
-                name: "Humidity", 
-                yaxis: 'y2', 
-                type: 'scatter',
-                //mode: 'lines+markers',
-                line: {shape: 'spline', width: 2},
-                marker:{color: 'rgba(85,159,255, 0.7)'}
-            };
-
-            var combined = [tempTrace, humTrace];
-
-            // Find min and max points. May not be totally necessary but no harm
-            tempMax = Math.max.apply(null, temperature);
-            tempMin = Math.min.apply(null, temperature);
-            humMax = Math.max.apply(null, humidity);
-            humMin = Math.min.apply(null, humidity);
-
-            globalMax = Math.max(tempMax, humMax) + 3;
-            globalMin = Math.min(tempMin, humMin) - 3;
-
-            var aesthetics = {
-                title: 'Temperature and Humidity Monitoring',
-                plot_bgcolor: 'rgba(240,240,240,1)',
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                xaxis: {
-                    title: 'Time',
-                    showgrid: true,
-                    gridcolor: 'rgba(255,255,255,1)',
-                    zeroline: true
-                },
-                yaxis: {
-                    title:'Temperature (Celsius)',
-                    color: 'rgb(255,122,105)',
-                    showline: true,
-                    showgrid: true,
-                    gridcolor: 'rgba(255,255,255,1)',
-                    range: [tempMin - 0.5, tempMax + 0.5]
-                },
-                
-                yaxis2: {
-                    title: 'Humidity (percent)',
-                    color: 'rgba(85,159,255, 0.7)',
-                    showline: true,
-                    showgrid: true,
-                    gridcolor: 'rgba(255,255,255,0)', // Don't want confusing double grids
-                    overlaying: 'y',
-                    side: 'right',
-                    range: [humMin - 0.5, humMax + 0.5]
-                } 
-                
-            };
-            Plotly.newPlot('graph', combined, aesthetics)
-        }
-
-            getData(); // Call the chain of events to get the data.
-            console.log( Plotly.BUILD );
+        <script type="text/javascript" src="/static/analysis.js">
         </script>
-
 
 
     </body>

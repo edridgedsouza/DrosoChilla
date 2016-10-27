@@ -1,67 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lab Monitor</title>
-
-
-
-        <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-
-
-
-        <!--[if lte IE 8]>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Monitor</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <!--[if lte IE 8]>
           
             <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
           
         <![endif]-->
-        <!--[if gt IE 8]><!-->
-          
-            <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
-            <link rel="stylesheet" href="/static/blog.css">
-            <link rel='shortcut icon' href='/static/favicon.ico' type='image/x-icon'>
+    <!--[if gt IE 8]><!-->
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+    <link rel="stylesheet" href="/static/blog.css">
+    <link rel='shortcut icon' href='/static/favicon.ico' type='image/x-icon'>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+    $(function() {
+        $("#datepicker1").datepicker();
+    });
 
 
-            <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-            <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-            <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    $(function() {
+        $("#datepicker2").datepicker();
+    });
+    </script>
+    <!--<![endif]-->
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
+</head>
 
-            <script>
-              $( function() {
-                $( "#datepicker1" ).datepicker();
-              } );
-
-          
-              $( function() {
-                $( "#datepicker2" ).datepicker();
-              } );
-            </script>
-
-
-        <!--<![endif]-->
-
-
-
-        <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-        <!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
-    </head>
-
-
-
-    <body>
-
-
-
+<body>
     <div id="layout" class="pure-g">
-
-
         <div class="sidebar pure-u-1 pure-u-md-1-4">
             <div class="header">
                 <h1 class="brand-title">Lab Monitor</h1>
                 <h2 class="brand-tagline">Created with Python and Raspberry Pi</h2>
-
                 <nav class="nav">
                     <ul class="nav-list">
                         <li class="nav-item">
@@ -74,62 +51,51 @@
                 </nav>
             </div>
         </div>
-
-
         <div class="content pure-u-1 pure-u-md-3-4">
             <div>
-                <div class="posts"> <h1 class="content-subhead">Raspberry Pi Monitor</h1>
+                <div class="posts">
+                    <h1 class="content-subhead">Raspberry Pi Monitor</h1>
                     <section class="post">
                         <header class="post-header">
                             <a href="https://www.bio.umass.edu/biology/"><img class="post-avatar" alt="Raspberry Pi" height="48" width="48" src="/static/umass.png"></a>
-
                             <h2 class="post-title">Graphical temperature and humidity monitor</h2>
-
                             <p class="post-meta">
                                 By <a href="http://marksteinlab.org/" class="post-author">Markstein Lab</a>
                             </p>
                         </header>
-
                         <div class="post-description">
                             <p>Select date range to generate graph.</p>
                             <p>
-                                Start date: <input style="text-align: center;" type="text" id="datepicker1" placeholder="Start date">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                End date: <input style="text-align: center;" type="text" id="datepicker2" placeholder="End date">
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                Start date:
+                                <input style="text-align: center;" type="text" id="datepicker1" placeholder="Start date"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End date:
+                                <input style="text-align: center;" type="text" id="datepicker2" placeholder="End date"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="$('#graph').html(''); graphIt(scaleDates());">Generate graph</button>
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a id="downloader"><button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="downloadify(scaleDates());">Download data</button></a>
+                                <a id="downloader">
+                                    <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="downloadify(scaleDates());">Download data</button>
+                                </a>
                             </p>
-
                             <div id="graph" style="width:1000px;height:600px; border-style: solid; border-color: #EEEEEE; text-align: center;"><span style="vertical-align: middle; line-height:600px;">Please generate your graph to see the visualization.</span></div>
-
                             <!-- Not really necessary but whatever. You can always just refresh the page.
                             <p>
                                 <button onclick="getData();">Update data</button>
                             </p>
                             -->
-
                         </div>
                     </section>
-
-                <div class="footer">
-                    <div class="pure-menu pure-menu-horizontal">
-                        <ul>
-                            <li class="pure-menu-item"><a href="http://marksteinlab.org/" class="pure-menu-link">Markstein Lab</a></li>
-                            <li class="pure-menu-item"><a href="http://github.com/edridgedsouza/LabMonitor" class="pure-menu-link">GitHub</a></li>
-                        </ul>
+                    <div class="footer">
+                        <div class="pure-menu pure-menu-horizontal">
+                            <ul>
+                                <li class="pure-menu-item"><a href="http://marksteinlab.org/" class="pure-menu-link">Markstein Lab</a></li>
+                                <li class="pure-menu-item"><a href="http://github.com/edridgedsouza/LabMonitor" class="pure-menu-link">GitHub</a></li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-
                 </div>
             </div>
         </div>
-
     </div>
+    <script type="text/javascript" src="/static/analysis.js"></script>
+</body>
 
-
-
-        <script type="text/javascript" src="/static/analysis.js"></script>
-    </body>
-</html>     
+</html>

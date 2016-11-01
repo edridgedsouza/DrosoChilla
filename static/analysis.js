@@ -36,6 +36,23 @@ function getData() { // Async data loading
     });
 }
 
+
+function getMostRecent(){ //Display most recent temperature readings.
+    var paragraph = document.getElementById("mostRecent");
+    var lastMatch = df[1].length - 1;
+
+    if (df[1][lastMatch] != -999){
+        var results = "<b>Date:</b> " + df[0][lastMatch] + 
+        "; <b>Temperature:</b> <span style='color:rgb(255,122,105)'>" + df[1][lastMatch] + 
+        "</span>; <b>Humidity:</b> <span style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</span>";
+        paragraph.innerHTML = "Most recent results: &nbsp;&nbsp;&nbsp;" + results;
+    }
+    else{
+        paragraph.innerHTML = "Your sensor is returning null measurements. Please ensure that it is properly connected and try again."
+    }
+}
+
+
 function process(rows) { // Parse inputs into arrays
     var time = [],
         temp = [],
@@ -61,6 +78,7 @@ function process(rows) { // Parse inputs into arrays
 
     console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);
     df = [time, temp, hum];
+    getMostRecent();
 }
 
 
@@ -217,3 +235,4 @@ function downloadify(arr) {
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "my_data.tsv");
 }
+

@@ -31,7 +31,7 @@ defaultInputs();
 var df; // Global var. Main df gets loaded once, while scaleDates() returns subsets
 
 function getData() { // Async data loading
-    Plotly.d3.tsv("/log", function(data) {
+    Plotly.d3.tsv("/log", function(data) { 
         process(data);
     });
 }
@@ -42,13 +42,13 @@ function getMostRecent(){ //Display most recent temperature readings.
     var lastMatch = df[1].length - 1;
 
     if (df[1][lastMatch] != -999){
-        var results = "<b>Date:</b> " + df[0][lastMatch] + 
-        "; <b>Temperature:</b> <span style='color:rgb(255,122,105)'>" + df[1][lastMatch] + 
-        "</span>; <b>Humidity:</b> <span style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</span>";
-        paragraph.innerHTML = "Most recent results: &nbsp;&nbsp;&nbsp;" + results;
+        var results = "<span style='color:black'>Date:</span> <b>" + df[0][lastMatch] + 
+        "</b>; <span style='color:black'>Temperature:</span> <b style='color:rgb(255,122,105)'>" + df[1][lastMatch] + 
+        "</b>; <span style='color:black'>Humidity:</span> <b style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</b>";
+        paragraph.innerHTML = "<span style='color:rgb(150,150,150); font-size:10pt;'>Most recent results:</span> &nbsp;&nbsp;&nbsp;" + results;
     }
     else{
-        paragraph.innerHTML = "Your sensor is returning null measurements. Please ensure that it is properly connected and try again."
+        paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>"
     }
 }
 

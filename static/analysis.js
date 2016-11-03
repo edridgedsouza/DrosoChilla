@@ -37,6 +37,66 @@ function getData() { // Async data loading
 }
 
 
+
+function process(rows) { // Parse inputs into arrays
+    var time = [],
+        temp = [],
+        hum = [],
+        timesort = [],
+        tempsort = [],
+        humsort = [];
+
+    for (var i = 0; i < rows.length; i++) {
+        currentRow = rows[i];
+        time.push(currentRow['time']);
+        temp.push(parseFloat(currentRow['temp']));
+        hum.push(parseFloat(currentRow['hum']));
+    }
+
+    // Remove outlier values where temp and humidity sensor don't work
+    while (temp.indexOf(-999) != -1) {
+        outlier = temp.indexOf(-999);
+            /* Uncomment if you just want to discard these data points
+            time.splice(outlier,1)
+            temp.splice(outlier,1)
+            hum.splice(outlier,1) */
+        temp[outlier] = null;
+        hum[outlier] = null;
+    }
+
+    // Part where we sort time, temp, and hum according to time. For whatever reason, the alternative is Plotly improperly connecting the splines.
+    // http://stackoverflow.com/a/13960306
+    // We build a list of indices, then rearrange them however `time` will be when fully sorted. Then re-index `time`, `temp`, and `hum` according to the new index order.
+    
+    
+    var idx = [];
+    for (var j = 0; j < time.length; j++) {
+        idx.push(j);
+    }
+    var comparator = function(arr) {
+        return function(a, b) {
+            return ((arr[a] < arr[b]) ? -1 : ((arr[a] > arr[b]) ? 1 : 0));
+        };
+    };
+    idx = idx.sort(comparator(time)); // Proper order of indices
+    
+    console.log(idx.length, time.length); // Make sure this sort is working as intended
+    
+    for (var k = 0; k < time.length; k++) {
+        timesort.push(time[idx[k]]);
+        tempsort.push(temp[idx[k]]);
+        humsort.push(hum[idx[k]]);
+    }
+    
+
+    // For debugging purposes
+    console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);
+    
+    df = [timesort, tempsort, humsort]; // Global, accessible externally from getMostRecent() and graphIt()
+    getMostRecent();
+}
+
+
 function getMostRecent(){ //Display most recent temperature readings.
     var paragraph = document.getElementById("mostRecent");
     var lastMatch = df[1].length - 1;
@@ -50,35 +110,6 @@ function getMostRecent(){ //Display most recent temperature readings.
     else{
         paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>"
     }
-}
-
-
-function process(rows) { // Parse inputs into arrays
-    var time = [],
-        temp = [],
-        hum = [];
-
-    for (var i = 0; i < rows.length; i++) {
-        currentRow = rows[i];
-        time.push(currentRow['time']);
-        temp.push(parseFloat(currentRow['temp']));
-        hum.push(parseFloat(currentRow['hum']));
-    }
-
-    // Remove outlier values where temp and humidity sensor don't work
-    while (temp.indexOf(-999) != -1) {
-        outlier = temp.indexOf(-999)
-            /* Uncomment if you just want to discard these data points
-            time.splice(outlier,1)
-            temp.splice(outlier,1)
-            hum.splice(outlier,1) */
-        temp[outlier] = null
-        hum[outlier] = null
-    }
-
-    console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);
-    df = [time, temp, hum];
-    getMostRecent();
 }
 
 

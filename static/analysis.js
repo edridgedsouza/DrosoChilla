@@ -41,7 +41,7 @@ function getMostRecent(){ //Display most recent temperature readings.
     var paragraph = document.getElementById("mostRecent");
     var lastMatch = df[1].length - 1;
 
-    if (df[1][lastMatch] != -999){
+    if (df[1][lastMatch] != null){
         var results = "<span style='color:black'>Date:</span> <b>" + df[0][lastMatch] + 
         "</b>; <span style='color:black'>Temperature:</span> <b style='color:rgb(255,122,105)'>" + df[1][lastMatch] + 
         "</b>; <span style='color:black'>Humidity:</span> <b style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</b>";

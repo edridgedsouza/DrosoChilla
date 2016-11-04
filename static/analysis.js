@@ -107,8 +107,14 @@ function getMostRecent() { //Display most recent temperature readings.
             "</b>; <span style='color:black'>Humidity:</span> <b style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</b>";
         paragraph.innerHTML = "<span style='color:rgb(150,150,150); font-size:10pt;'>Most recent results:</span> &nbsp;&nbsp;&nbsp;" + results;
     } else {
-        paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>"
+        paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>";
     }
+
+
+    // Rendering the Download buttons here because we don't want people to click until the data is loaded.
+
+    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); graphIt(scaleDates());\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(scaleDates());\">Download data</button></a>";
+    document.getElementById("buttons").innerHTML = buttonHTML;
 }
 
 

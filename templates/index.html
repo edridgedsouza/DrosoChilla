@@ -69,11 +69,13 @@
                                 Start date:
                                 <input style="text-align: center;" type="text" id="datepicker1" placeholder="Start date"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End date:
                                 <input style="text-align: center;" type="text" id="datepicker2" placeholder="End date"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="$('#graph').html(''); graphIt(scaleDates());">Generate graph</button>
-                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a id="downloader">
-                                    <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="downloadify(scaleDates());">Download data</button>
-                                </a>
+                                <span id="buttons">
+                                    <!--<button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="$('#graph').html(''); graphIt(scaleDates());">Generate graph</button>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a id="downloader">
+                                        <button class="pure-button pure-button-primary" style="background: rgb(105, 167, 216);" onclick="downloadify(scaleDates());">Download data</button>
+                                    </a> -->
+                                </span>
                             </p>
                             <div id="graph" style="width:100%;height:600px; border-style: solid; border-color: #EEEEEE; text-align: center;"><span style="vertical-align: middle; line-height:600px;">Please generate your graph to see the visualization.</span></div>
                             <!-- Not really necessary but whatever. You can always just refresh the page.

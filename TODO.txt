@@ -1,4 +1,5 @@
 -Make web server accessible outside of ethernet network
+-Smarter loading data on client side, as needed
 -Incorporate "curate" into scheduler
 -Incorporate app.py into scheduler
 -Allow webapp to dynamically choose number of data points

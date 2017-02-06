@@ -23,8 +23,8 @@ if grep -q "$PWD/measure.py" currentcron; then
 	echo "Measuring job already scheduled"
 else
 	# Working around crontab's 1-minute time resolution
-	echo "* * * * * $PWD/measure.py >> $PWD/templog.txt somescript.py 2> /dev/null" >> currentcron
-	echo "* * * * * (sleep 30; $PWD/measure.py >> $PWD/templog.txt somescript.py 2> /dev/null)" >> currentcron
+	echo "* * * * * $PWD/measure.py >/dev/null 2>&1" >> currentcron
+	echo "* * * * * (sleep 30; $PWD/measure.py >/dev/null 2>&1)" >> currentcron
 	echo "Measuring job added to cron"
 fi
 

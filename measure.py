@@ -28,10 +28,16 @@ if __name__ == '__main__':
 	date, temp, hum = measure(sensor)
 	output = '{datetime}\t{temperature}\t{humidity}'.format(datetime=date, temperature=temp, humidity=hum)
 	
-	if (bool(re.search("-999", output))): # If invalid output, log to error log
+	print(output) # Show to stdout for debugging
+	
+	# Then write to appropriate log
+	if (bool(re.search("-999", output))): 
+
 		with open('errorlog.txt', 'a') as f:
 			f.write(output)
 			f.write('\n')
 	else:
-		print(output)
+		with open('templog.txt', 'a') as f:
+			f.write(output)
+			f.write('\n')
 		

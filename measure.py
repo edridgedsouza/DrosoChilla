@@ -5,6 +5,12 @@ import pigpio, DHT22
 import time, datetime
 import re
 
+# https://stackoverflow.com/a/4943474
+import os
+import sys
+def get_script_path():
+    return os.path.dirname(os.path.realpath(sys.argv[0]))
+
 def initializeIO(pin):
 	pi = pigpio.pi()
 	sensor = DHT22.sensor(pi, pin)
@@ -29,15 +35,16 @@ if __name__ == '__main__':
 	output = '{datetime}\t{temperature}\t{humidity}'.format(datetime=date, temperature=temp, humidity=hum)
 	
 	print(output) # Show to stdout for debugging
-	
+
+	pwd = get_script_path() + '/'
+
 	# Then write to appropriate log
 	if (bool(re.search("-999", output))): 
-
-		with open('errorlog.txt', 'a') as f:
+		with open(pwd + 'errorlog.txt', 'a') as f:
 			f.write(output)
 			f.write('\n')
 	else:
-		with open('templog.txt', 'a') as f:
+		with open(pwd + 'templog.txt', 'a') as f:
 			f.write(output)
 			f.write('\n')
 		

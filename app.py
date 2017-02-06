@@ -16,7 +16,7 @@ def makelog():
 		data = file.readlines()
 	# Ignore error outputs to log
 	def isTrueLine(line):
-		pattern = re.compile('.*\\t.*\\t.*')
+		pattern = re.compile('\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\t(?!-999)[\d\.]{0,5}(?!-999)\t[\d\.]{0,5}')
 		return bool(pattern.search(line))
 	truelines = [line for line in data if isTrueLine(line)]
 	finaldata = ''.join(truelines)

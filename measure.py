@@ -3,6 +3,7 @@
 
 import pigpio, DHT22
 import time, datetime
+import re
 
 def initializeIO(pin):
 	pi = pigpio.pi()
@@ -25,6 +26,12 @@ def measure(s):
 if __name__ == '__main__':
 	pi, sensor = initializeIO(4) # GPIO pin 4 
 	date, temp, hum = measure(sensor)
-
-	print('{datetime}\t{temperature}\t{humidity}'.format(datetime=date, temperature=temp, humidity=hum))
+	output = '{datetime}\t{temperature}\t{humidity}'.format(datetime=date, temperature=temp, humidity=hum)
 	
+	if (bool(re.search("-999", output))): # If invalid output, log to error log
+		with open('errorlog.txt', 'a') as f:
+			f.write(output)
+			f.write('\n')
+	else:
+		print(output)
+		

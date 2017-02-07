@@ -25,3 +25,13 @@ echo "Installing Flask web framework"
 # Install the Flask web framework
 sudo apt-get install python3-flask
 echo "Installed Flask web framework"
+
+# Change local date/time
+echo "Adjusting date and time"
+sudo dpkg-reconfigure tzdata
+sudo /etc/init.d/ntp stop
+sudo ntpd -q -g
+sudo /etc/init.d/ntp start
+echo "Local data and time is changed. Current date and time is:
+
+$(date)"

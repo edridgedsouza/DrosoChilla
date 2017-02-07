@@ -4,6 +4,5 @@
 -Incorporate app.py into scheduler
 -Allow webapp to dynamically choose number of data points
 -Logrotate
--World clock sync
 -Security patches
 -Send texts/email notifications?

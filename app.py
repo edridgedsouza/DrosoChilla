@@ -12,12 +12,12 @@ app = Flask(__name__)
 @app.route('/log')
 def makelog():
 	# Placeholder for smart date selection
-	startdate = request.args.get("start")
-	enddate = request.args.get("end")
-	if (startdate is None) or (enddate is None):
-		today = date.today()
-		yesterday = date(startdate.year, startdate.month, startdate.day - 1)
-		(startdate, enddate) = (yesterday, today)
+	# startdate = request.args.get("start")
+	# enddate = request.args.get("end")
+	# if (startdate is None) or (enddate is None):
+	# 	today = date.today()
+	# 	yesterday = date(startdate.year, startdate.month, startdate.day - 1)
+	# 	(startdate, enddate) = (yesterday, today)
 
 
 

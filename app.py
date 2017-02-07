@@ -3,20 +3,20 @@
 
 from flask import Flask, render_template, request
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 app = Flask(__name__)
 
 today = datetime.today()
 todayString = datetime.strftime(today, "%Y-%m-%d")
-yesterday = datetime(today.year, today.month, today.day-1)
+yesterday = today - timedelta(days=1)
 yesterdayString = datetime.strftime(yesterday, "%Y-%m-%d")
 
 def filterDates(rawlines, start, end):
 	startDate = datetime.strptime(start, "%Y-%m-%d")
 	endDate = datetime.strptime(end, "%Y-%m-%d")
-	endDate = datetime(endDate.year, endDate.month, endDate.day + 1) # Because you want until 23:59 on the end date
+	endDate = endDate + timedelta(days=1) # Because you want until 23:59 on the end date
 
 	dates = [i.split('\t')[0] for i in rawlines]
 	parsedDates = [datetime.strptime(i, '%Y-%m-%d %H:%M:%S') for i in dates]

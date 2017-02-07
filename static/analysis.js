@@ -30,6 +30,80 @@ defaultInputs();
 
 var df; // Global var. Main df gets loaded once, while scaleDates() returns subsets
 
+function graphIt(dt) { // Not called until button pushed; prevents mishaps with async data loading
+    var datetime = dt[0],
+        temperature = dt[1],
+        humidity = dt[2];
+    var plotDiv = document.getElementById("plot"); // Doesn't seem to be used but it was in the tutorial so I'm keeping it.
+    var tempTrace = {
+        x: datetime,
+        y: temperature,
+        name: "Temperature",
+        type: 'scatter',
+        //mode: 'lines+markers',
+        line: { shape: 'spline', width: 4 },
+        marker: { color: 'rgb(255,122,105)' }
+    };
+
+    var humTrace = {
+        x: datetime,
+        y: humidity,
+        name: "Humidity",
+        yaxis: 'y2',
+        type: 'scatter',
+        //mode: 'lines+markers',
+        line: { shape: 'spline', width: 2 },
+        marker: { color: 'rgba(85,159,255, 0.7)' }
+    };
+
+    var combined = [tempTrace, humTrace];
+
+    /*
+    var temp_nonnull = temperature.filter(function(y) { return (y != null)});
+    var hum_nonnull = humidity.filter(function(y) { return (y != null)});
+
+    // Find min and max points. May not be totally necessary but no harm
+    var tempMax = Math.max.apply(null, temp_nonnull),
+    tempMin = Math.min.apply(null, temp_nonnull), // Ignore null values
+    humMax = Math.max.apply(null, hum_nonnull),
+    humMin = Math.min.apply(null, hum_nonnull); // Ignore null values
+    */
+
+    var aesthetics = {
+        title: 'Temperature and Humidity Monitoring',
+        plot_bgcolor: 'rgba(240,240,240,1)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        xaxis: {
+            title: 'Time',
+            showgrid: true,
+            gridcolor: 'rgba(255,255,255,1)',
+            zeroline: true
+        },
+        yaxis: {
+            title: 'Temperature (Celsius)',
+            color: 'rgb(255,122,105)',
+            showline: true,
+            showgrid: true,
+            gridcolor: 'rgba(255,255,255,1)'
+                //range: [tempMin - 0.5, tempMax + 0.5]
+        },
+
+        yaxis2: {
+            title: 'Humidity (percent)',
+            color: 'rgba(85,159,255, 0.7)',
+            showline: true,
+            showgrid: true,
+            gridcolor: 'rgba(255,255,255,0)', // Don't want confusing double grids
+            overlaying: 'y',
+            side: 'right'
+                //range: [humMin - 0.5, humMax + 0.5]
+        }
+
+    };
+    Plotly.newPlot('graph', combined, aesthetics)
+}
+
+// Start of async callback chain
 function getData() { // Async data loading
     Plotly.d3.tsv("/log", function(data) {
         process(data);
@@ -115,81 +189,10 @@ function getMostRecent() { //Display most recent temperature readings.
 
     var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); graphIt(scaleDates());\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(scaleDates());\">Download data</button></a>";
     document.getElementById("buttons").innerHTML = buttonHTML;
+
+    graphIt(df) // Once everything has initially loaded on the page, make a graph with default params
 }
 
-
-function graphIt(dt) { // Not called until button pushed; prevents mishaps with async data loading
-    var datetime = dt[0],
-        temperature = dt[1],
-        humidity = dt[2];
-    var plotDiv = document.getElementById("plot"); // Doesn't seem to be used but it was in the tutorial so I'm keeping it.
-    var tempTrace = {
-        x: datetime,
-        y: temperature,
-        name: "Temperature",
-        type: 'scatter',
-        //mode: 'lines+markers',
-        line: { shape: 'spline', width: 4 },
-        marker: { color: 'rgb(255,122,105)' }
-    };
-
-    var humTrace = {
-        x: datetime,
-        y: humidity,
-        name: "Humidity",
-        yaxis: 'y2',
-        type: 'scatter',
-        //mode: 'lines+markers',
-        line: { shape: 'spline', width: 2 },
-        marker: { color: 'rgba(85,159,255, 0.7)' }
-    };
-
-    var combined = [tempTrace, humTrace];
-
-    /*
-    var temp_nonnull = temperature.filter(function(y) { return (y != null)});
-    var hum_nonnull = humidity.filter(function(y) { return (y != null)});
-
-    // Find min and max points. May not be totally necessary but no harm
-    var tempMax = Math.max.apply(null, temp_nonnull),
-    tempMin = Math.min.apply(null, temp_nonnull), // Ignore null values
-    humMax = Math.max.apply(null, hum_nonnull),
-    humMin = Math.min.apply(null, hum_nonnull); // Ignore null values
-    */
-
-    var aesthetics = {
-        title: 'Temperature and Humidity Monitoring',
-        plot_bgcolor: 'rgba(240,240,240,1)',
-        paper_bgcolor: 'rgba(0,0,0,0)',
-        xaxis: {
-            title: 'Time',
-            showgrid: true,
-            gridcolor: 'rgba(255,255,255,1)',
-            zeroline: true
-        },
-        yaxis: {
-            title: 'Temperature (Celsius)',
-            color: 'rgb(255,122,105)',
-            showline: true,
-            showgrid: true,
-            gridcolor: 'rgba(255,255,255,1)'
-                //range: [tempMin - 0.5, tempMax + 0.5]
-        },
-
-        yaxis2: {
-            title: 'Humidity (percent)',
-            color: 'rgba(85,159,255, 0.7)',
-            showline: true,
-            showgrid: true,
-            gridcolor: 'rgba(255,255,255,0)', // Don't want confusing double grids
-            overlaying: 'y',
-            side: 'right'
-                //range: [humMin - 0.5, humMax + 0.5]
-        }
-
-    };
-    Plotly.newPlot('graph', combined, aesthetics)
-}
 
 getData(); // Call the chain of events to get the data. Asynchronous, so we'll wait for user to call graphIt()
 console.log(Plotly.BUILD);
@@ -197,7 +200,7 @@ console.log(Plotly.BUILD);
 
 // Section where we reshape dataframe according to date picker
 
-function scaleDates() {
+function scaleDates() { // Only gets called when button pressed.
 
     var box1 = document.getElementById("datepicker1").value,
         box2 = document.getElementById("datepicker2").value;

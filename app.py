@@ -1,8 +1,9 @@
 #! /usr/bin/env python3
 # Flask web app
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import re
+from datetime import date
 
 
 app = Flask(__name__)
@@ -10,9 +11,19 @@ app = Flask(__name__)
 
 @app.route('/log')
 def makelog():
+	# Placeholder for smart date selection
+	startdate = request.args.get("start")
+	enddate = request.args.get("end")
+	if (startdate is None) or (enddate is None):
+		today = date.today()
+		yesterday = date(startdate.year, startdate.month, startdate.day - 1)
+		(startdate, enddate) = (yesterday, today)
+
+
+
 	header = 'time\ttemp\thum\n'
 	LINES = 500
-	with open('./templog.txt','r') as file:
+	with open('./datalog.txt','r') as file:
 		data = file.readlines()
 	# Ignore error outputs to log, just in case
 	def isTrueLine(line):
@@ -25,6 +36,10 @@ def makelog():
 
 @app.route('/errlog')
 def makeErrlog():
+	# Placeholder for smart date selection
+	# When finished doing for regular log, copy over here.
+
+
 	header = 'time\ttemp\thum\n'
 	LINES = 500
 	with open('./errorlog.txt') as file:

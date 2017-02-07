@@ -48,6 +48,6 @@ Temporary Items
 
 
 # Specific files
-templog.txt
+datalog.txt
 *.pyc
 __pycache__

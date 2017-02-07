@@ -3,7 +3,7 @@
 sudo ./daemon.sh > /dev/null 2>&1
 
 
-touch templog.txt # Our logfile
+touch datalog.txt # Our logfile
 touch currentcron # Cron tempfile
 
 # Append this new job to existing cron list

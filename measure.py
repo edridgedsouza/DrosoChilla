@@ -44,7 +44,7 @@ if __name__ == '__main__':
 			f.write(output)
 			f.write('\n')
 	else:
-		with open(pwd + 'templog.txt', 'a') as f:
+		with open(pwd + 'datalog.txt', 'a') as f:
 			f.write(output)
 			f.write('\n')
 		

@@ -1,3 +1,6 @@
+// Global var. Other functions modify it based on the date scaling
+var df; 
+
 // Default values for date inputs
 function defaultInputs() {
     var today = new Date();
@@ -26,11 +29,8 @@ function defaultInputs() {
 }
 defaultInputs();
 
-
-
-var df; // Global var. Other functions modify it based on the date scaling
-
-function graphIt(dt) { // Not called until button pushed; prevents mishaps with async data loading
+// Not called until button pushed; prevents mishaps with async data loading
+function graphIt(dt) { 
     var datetime = dt[0],
         temperature = dt[1],
         humidity = dt[2];
@@ -104,15 +104,15 @@ function graphIt(dt) { // Not called until button pushed; prevents mishaps with 
 }
 
 // Start of async callback chain
-function getData(url, firstTime) { // Async data loading
+function getData(url, firstTime) {
     Plotly.d3.tsv(url, function(data) {
         process(data, firstTime);
     });
 }
 
 
-
-function process(rows, firstTime) { // Parse inputs into arrays
+// Parse inputs into arrays
+function process(rows, firstTime) { 
     var time = [],
         temp = [],
         hum = [],
@@ -172,8 +172,8 @@ function process(rows, firstTime) { // Parse inputs into arrays
     
 }
 
-
-function getMostRecent(firstTime) { //Display most recent temperature readings.
+//Display most recent temperature readings.
+function getMostRecent(firstTime) {
     if (firstTime){
         var paragraph = document.getElementById("mostRecent");
         var lastMatch = df[1].length - 1;
@@ -202,8 +202,8 @@ console.log(Plotly.BUILD);
 
 
 // Section where we reshape dataframe according to date picker
-
-function scaleDates() { // Only gets called when button pressed.
+// Only gets called when button pressed.
+function scaleDates() { 
 
     var box1 = document.getElementById("datepicker1").value,
         box2 = document.getElementById("datepicker2").value;

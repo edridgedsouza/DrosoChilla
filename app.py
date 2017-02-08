@@ -8,10 +8,6 @@ from datetime import datetime, timedelta
 
 app = Flask(__name__)
 
-today = datetime.today()
-todayString = datetime.strftime(today, "%Y-%m-%d")
-yesterday = today - timedelta(days=1)
-yesterdayString = datetime.strftime(yesterday, "%Y-%m-%d")
 
 def filterDates(rawlines, start, end):
 	startDate = datetime.strptime(start, "%Y-%m-%d")
@@ -28,6 +24,13 @@ def filterDates(rawlines, start, end):
 
 @app.route('/log', methods=['GET'])
 def makelog():
+	# Variables for datestrings must be defined EVERY time the log is called, 
+	# not just once at the start.
+	# Don't make that mistake again lol
+	today = datetime.today()
+	todayString = datetime.strftime(today, "%Y-%m-%d")
+	yesterday = today - timedelta(days=1)
+	yesterdayString = datetime.strftime(yesterday, "%Y-%m-%d")
 	startParam = request.args.get('start', yesterdayString)
 	endParam = request.args.get('end', todayString)
 
@@ -46,6 +49,10 @@ def makelog():
 
 @app.route('/errlog', methods=['GET'])
 def makeErrlog():
+	today = datetime.today()
+	todayString = datetime.strftime(today, "%Y-%m-%d")
+	yesterday = today - timedelta(days=1)
+	yesterdayString = datetime.strftime(yesterday, "%Y-%m-%d")
 	startParam = request.args.get('start', yesterdayString)
 	endParam = request.args.get('end', todayString)
 

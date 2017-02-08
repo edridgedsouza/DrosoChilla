@@ -104,15 +104,15 @@ function graphIt(dt) { // Not called until button pushed; prevents mishaps with 
 }
 
 // Start of async callback chain
-function getData(url) { // Async data loading
+function getData(url, firstTime) { // Async data loading
     Plotly.d3.tsv(url, function(data) {
-        process(data);
+        process(data, firstTime);
     });
 }
 
 
 
-function process(rows) { // Parse inputs into arrays
+function process(rows, firstTime) { // Parse inputs into arrays
     var time = [],
         temp = [],
         hum = [],
@@ -167,34 +167,37 @@ function process(rows) { // Parse inputs into arrays
     console.log('Time:', time, time.length, 'Temp:', temp, temp.length, 'Humidity:', hum, hum.length);
 
     df = [timesort, tempsort, humsort]; // Global, accessible externally from getMostRecent() and graphIt()
-    getMostRecent();
+    
+    getMostRecent(firstTime);
+    
 }
 
 
-function getMostRecent() { //Display most recent temperature readings.
-    var paragraph = document.getElementById("mostRecent");
-    var lastMatch = df[1].length - 1;
+function getMostRecent(firstTime) { //Display most recent temperature readings.
+    if (firstTime){
+        var paragraph = document.getElementById("mostRecent");
+        var lastMatch = df[1].length - 1;
 
-    if (df[1][lastMatch] != null) {
-        var results = "<span style='color:black'>Date:</span> <b>" + df[0][lastMatch] +
-            "</b>; <span style='color:black'>Temperature:</span> <b style='color:rgb(255,122,105)'>" + df[1][lastMatch] +
-            "</b>; <span style='color:black'>Humidity:</span> <b style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</b>";
-        paragraph.innerHTML = "<span style='color:rgb(150,150,150); font-size:10pt;'>Most recent results:</span> &nbsp;&nbsp;&nbsp;" + results;
-    } else {
-        paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>";
+        if (df[1][lastMatch] != null) {
+            var results = "<span style='color:black'>Date:</span> <b>" + df[0][lastMatch] +
+                "</b>; <span style='color:black'>Temperature:</span> <b style='color:rgb(255,122,105)'>" + df[1][lastMatch] +
+                "</b>; <span style='color:black'>Humidity:</span> <b style='color:rgba(85,159,255, 0.7)'>" + df[2][lastMatch] + "</b>";
+            paragraph.innerHTML = "<span style='color:rgb(150,150,150); font-size:10pt;'>Most recent results:</span> &nbsp;&nbsp;&nbsp;" + results;
+        } else {
+            paragraph.innerHTML = "<span style='color:rgb(150,150,150);'>Your sensor is returning null measurements. Please ensure that it is properly connected and try again.</span>";
+        }
+
+
+        // Rendering the Download buttons here because we don't want people to click until the data is loaded.
+
+        var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); scaleDates();\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(df);\">Download data</button></a>";
+        document.getElementById("buttons").innerHTML = buttonHTML;
     }
-
-
-    // Rendering the Download buttons here because we don't want people to click until the data is loaded.
-
-    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); scaleDates();\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(df);\">Download data</button></a>";
-    document.getElementById("buttons").innerHTML = buttonHTML;
-
     graphIt(df) // Once everything has initially loaded on the page, make a graph with default params
 }
 
 
-getData("/log"); // Call the chain of events to get the data. Asynchronous, so we'll wait for user to call graphIt()
+getData("/log", firstTime = true); // Call the chain of events to get the data. Asynchronous, so we'll wait for user to call graphIt()
 console.log(Plotly.BUILD);
 
 
@@ -215,7 +218,7 @@ function scaleDates() { // Only gets called when button pressed.
         endDate = convertDates(box2);
 
     var path = "/log?start=" + startDate + "&end=" + endDate;
-    getData(path)
+    getData(path, firstTime = false)
 }
 
 

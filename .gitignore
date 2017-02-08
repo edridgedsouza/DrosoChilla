@@ -49,5 +49,6 @@ Temporary Items
 
 # Specific files
 datalog.txt
+errorlog.txt
 *.pyc
 __pycache__

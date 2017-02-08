@@ -28,7 +28,7 @@ defaultInputs();
 
 
 
-var df; // Global var. Main df gets loaded once, while scaleDates() returns subsets
+var df; // Global var. Other functions modify it based on the date scaling
 
 function graphIt(dt) { // Not called until button pushed; prevents mishaps with async data loading
     var datetime = dt[0],
@@ -104,8 +104,8 @@ function graphIt(dt) { // Not called until button pushed; prevents mishaps with 
 }
 
 // Start of async callback chain
-function getData() { // Async data loading
-    Plotly.d3.tsv("/log", function(data) {
+function getData(url) { // Async data loading
+    Plotly.d3.tsv(url, function(data) {
         process(data);
     });
 }
@@ -187,14 +187,14 @@ function getMostRecent() { //Display most recent temperature readings.
 
     // Rendering the Download buttons here because we don't want people to click until the data is loaded.
 
-    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); graphIt(scaleDates());\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(scaleDates());\">Download data</button></a>";
+    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); scaleDates();\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(scaleDates());\">Download data</button></a>";
     document.getElementById("buttons").innerHTML = buttonHTML;
 
     graphIt(df) // Once everything has initially loaded on the page, make a graph with default params
 }
 
 
-getData(); // Call the chain of events to get the data. Asynchronous, so we'll wait for user to call graphIt()
+getData("/log"); // Call the chain of events to get the data. Asynchronous, so we'll wait for user to call graphIt()
 console.log(Plotly.BUILD);
 
 
@@ -214,47 +214,8 @@ function scaleDates() { // Only gets called when button pressed.
     var startDate = convertDates(box1),
         endDate = convertDates(box2);
 
-    function matchRange(re, array) {
-        truthIndex = [];
-
-        function getAllIndexes(arr, val) { // http://stackoverflow.com/questions/20798477/how-to-find-index-of-all-occurrences-of-element-in-array
-            var indexes = [],
-                i = -1;
-            while ((i = arr.indexOf(val, i + 1)) != -1) {
-                indexes.push(i);
-            }
-            return indexes;
-        }
-
-        for (i in array) {
-            truthIndex[i] = (re.test(array[i]));
-        }
-
-
-        trueIndices = getAllIndexes(truthIndex, true);
-        firstMatch = Math.min.apply(null, trueIndices);
-        lastMatch = Math.max.apply(null, trueIndices);
-
-        return ([firstMatch, lastMatch]);
-    }
-
-    var startRe = new RegExp(startDate),
-        stopRe = new RegExp(endDate);
-
-    var startIndex = Math.min.apply(null, matchRange(startRe, df[0]));
-    var stopIndex = Math.max.apply(null, matchRange(stopRe, df[0]));
-
-    if (startIndex > stopIndex) {
-        var temporary = startIndex,
-            startIndex = stopIndex,
-            stopIndex = temporary;
-    }
-
-    var Datetime = df[0].slice(startIndex, stopIndex);
-    var Temperature = df[1].slice(startIndex, stopIndex);
-    var Humidity = df[2].slice(startIndex, stopIndex);
-
-    return [Datetime, Temperature, Humidity];
+    var path = "/log?start=" + startDate + "&end=" + endDate;
+    getData(path)
 }
 
 

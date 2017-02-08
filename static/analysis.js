@@ -187,7 +187,7 @@ function getMostRecent() { //Display most recent temperature readings.
 
     // Rendering the Download buttons here because we don't want people to click until the data is loaded.
 
-    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); scaleDates();\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(scaleDates());\">Download data</button></a>";
+    var buttonHTML = "<button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"$('#graph').html(''); scaleDates();\">Generate graph</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id=\"downloader\"><button class=\"pure-button pure-button-primary\" style=\"background: rgb(105, 167, 216);\" onclick=\"downloadify(df);\">Download data</button></a>";
     document.getElementById("buttons").innerHTML = buttonHTML;
 
     graphIt(df) // Once everything has initially loaded on the page, make a graph with default params
@@ -219,8 +219,9 @@ function scaleDates() { // Only gets called when button pressed.
 }
 
 
-// Given scaled date range from scaleDates(), open a window to download TSV format file.
-function downloadify(arr) {
+// Once the API data has been loaded into `df`, downloadify() will open a window to download it.
+// Note: this means that it only downloads data once the graph has been generated for a date range.
+function downloadify(arr) { 
     var separator = "\t";
     var content = "data:text/tab-separated-values;charset=utf-8,";
     content += "Time" + separator + "Temperature" + separator + "Humidity\n"

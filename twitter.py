@@ -1,6 +1,7 @@
 import json
 import tweepy
 from datetime import datetime
+from time import sleep
 
 def setupAPI(apikey, apisecret, token, tokensecret):
 	auth = tweepy.OAuthHandler(apikey, apisecret)
@@ -8,11 +9,13 @@ def setupAPI(apikey, apisecret, token, tokensecret):
 	api = tweepy.API(auth)
 	return api
 
-def generateTweets(validline, errorline, temprange, humrange):
-	pass # Use see whether error or valid is most recent. If error, only update status with error.
-	# If valid is most recent, first make update status with time, temp, hum.
+def generateTweets(validline, errorline, temprange, humrange, userlist):
+	statuses = []
+	pass # Use see whether error or valid is most recent. If error, only append error status
+	# If valid is most recent, first append status with time, temp, hum.
 	# Then use getPart() and isInRange() to tell whether anything is out of range.
-	# If so, construct an additional status. Post that after.
+	# If so, append an additional status.
+	# If userlist is not blank, then @ all of them. Ensure not over 140 characters
 	# Return an array of either 1 or 2 strings.
 
 def getLastLine(filename):
@@ -45,12 +48,25 @@ def main():
 
 	if config['UseTwitter']:
 		auth = config['TwitterAuthInfo']
-		api = setupAPI(auth['ConsumerAPIkey'], auth['ConsumerAPIsecret'], auth['AccessToken'], auth['AccessTokenSecret'])
+		api = setupAPI(
+			auth['ConsumerAPIkey'], 
+			auth['ConsumerAPIsecret'], 
+			auth['AccessToken'], 
+			auth['AccessTokenSecret'])
 
-		# Make first tweet displaying time, temp, hum, every time called
-		# Make another tweet if out of temperature range
-		# Make another tweet if out of humidity range
-		# api.update_status(statusstring)
+		tweets = generateTweets(
+			lastValidLine, 
+			lastErrorLine, 
+			config['TemperatureRange'], 
+			config['HumidityRange'], 
+			config['UserList'])
+
+		if len(tweets) == 1:
+			api.update_status(tweets[0])
+		elif len(tweets) == 2:
+			api.update_status(tweets[0])
+			sleep(10)
+			api.update_status(tweets[1])
 
 if __name__ == '__main__':
 	main()

@@ -8,7 +8,7 @@ def setupAPI(apikey, apisecret, token, tokensecret):
 	api = tweepy.API(auth)
 	return api
 
-def generateTweets(validline, errorline):
+def generateTweets(validline, errorline, temprange, humrange):
 	pass # Use see whether error or valid is most recent. If error, only update status with error.
 	# If valid is most recent, first make update status with time, temp, hum.
 	# Then use getPart() and isInRange() to tell whether anything is out of range.

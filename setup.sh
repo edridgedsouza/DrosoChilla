@@ -22,9 +22,13 @@ rm DHT22_py.zip
 echo "Installed DHT22 sensor class for python"
 
 echo "Installing Flask web framework"
-# Install the Flask web framework
 sudo apt-get install python3-flask
 echo "Installed Flask web framework"
+
+echo "Installing Twitter python library"
+sudo pip3 install tweepy
+echo "Installed Twitter python library"
+
 
 # Change local date/time
 echo "Adjusting date and time"

@@ -50,5 +50,6 @@ Temporary Items
 # Specific files
 datalog.txt
 errorlog.txt
+twitter.json
 *.pyc
 __pycache__

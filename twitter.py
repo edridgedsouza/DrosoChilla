@@ -15,7 +15,7 @@ def generateTweets(validline, errorline, temprange, humrange, userlist):
 	# If valid is most recent, first append status with time, temp, hum.
 	# Then use getPart() and isInRange() to tell whether anything is out of range.
 	# If so, append an additional status.
-	# If userlist is not blank, then @ all of them. Ensure not over 140 characters
+	# If userlist is not blank, then @ all of them. Ensure not over 140 characters (after adding @ handles and reply link too)
 	# Return an array of either 1 or 2 strings.
 
 def getLastLine(filename):
@@ -64,9 +64,12 @@ def main():
 		if len(tweets) == 1:
 			api.update_status(tweets[0])
 		elif len(tweets) == 2:
-			api.update_status(tweets[0])
+			status1 = api.update_status(tweets[0])
+			username = status1._json.get('user').get('screen_name')
+			statusid = str(status1._json.get('id'))
+			quoteURL = ' twitter.com/' + username + '/status/' + statusid
 			sleep(10)
-			api.update_status(tweets[1])
+			api.update_status(tweets[1] + quoteURL)
 
 if __name__ == '__main__':
 	main()
